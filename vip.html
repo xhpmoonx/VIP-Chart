@@ -112,11 +112,26 @@
                     background: yellow;
                     box-shadow: 0 0 8px rgba(59, 130, 246, 0.5);
                     }
+                    .popup {
+                    position: absolute;
+                    background: white;
+                    border: 1px solid #cbd5e1;
+                    border-radius: 8px;
+                    padding: 10px 14px;
+                    font-size: 0.85em;
+                    color: #0f172a;
+                    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+                    pointer-events: none;
+                    z-index: 20;
+                    display: none;
+                    white-space: nowrap;
+                    }
+
 
                 </style>
     </head>
 <body>
-
+    <div id="popup" class="popup"></div>
   <div class="grid" id="curriculum">
     <svg id="svg" width="1000" height="800">
       <defs>
@@ -219,6 +234,17 @@
                 el.addEventListener('mouseenter', () => highlightArrows(el.id));
                 el.addEventListener('mouseleave', clearHighlights);
             });
+        //Add click listeners to all courses to show popup info
+            document.querySelectorAll('.course').forEach(course => {
+                course.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    showCourseInfo(course);
+                });
+                });
+        //Hide popup if you click anywhere else on the page
+            document.addEventListener('click', () => {
+            document.getElementById('popup').style.display = 'none';
+            });
     }
     //Highlights all arrows that start from a given course
     function highlightArrows(courseId) {
@@ -252,6 +278,29 @@
             el.classList.remove('active');
         });
     }
+    //Show popup box with course info (prereqs and dependencies)
+    function showCourseInfo(course) {
+        const id = course.id;
+        const name = course.querySelector('.label')?.innerText.split('\n')[0] || id;
+
+        const prereqs = arrows.filter(a => a.from === id).map(a => a.to);
+        const dependsOn = arrows.filter(a => a.to === id).map(a => a.from);
+
+        const lines = [];
+        lines.push(`<strong>${name}</strong>`);
+        if (prereqs.length) lines.push("• Prerequisite for: " + prereqs.join(", "));
+        if (dependsOn.length) lines.push("• Depends on: " + dependsOn.join(", "));
+        if (!prereqs.length && !dependsOn.length) lines.push("• No direct links");
+
+        const popup = document.getElementById('popup');
+        popup.innerHTML = lines.join("<br>");
+
+        const rect = course.getBoundingClientRect();
+        popup.style.left = `${rect.right + 10 + window.scrollX}px`;
+        popup.style.top = `${rect.top + window.scrollY}px`;
+        popup.style.display = 'block';
+    }
+
     window.addEventListener('load', renderArrows);
     window.addEventListener('resize', renderArrows);
   </script>
