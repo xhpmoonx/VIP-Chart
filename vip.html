@@ -94,6 +94,24 @@
                         stroke: #3b82f6;
                         opacity: 1;
                     }
+                    /* dim all arrows/courses when a focus is active */
+                    .grid.dimmed .course:not(.active) .circle {
+                    border-color: #94a3b8;
+                    background: #f1f5f9;
+                    color: #94a3b8;
+                    opacity: 0.3;
+                    box-shadow: none;
+                    }
+
+                    .grid.dimmed .arrow:not(.highlighted) {
+                    opacity: 0.1;
+                    }
+
+                    .course.active .circle {
+                    border-color: #3b82f6;
+                    background: yellow;
+                    box-shadow: 0 0 8px rgba(59, 130, 246, 0.5);
+                    }
 
                 </style>
     </head>
@@ -204,17 +222,34 @@
     }
     //Highlights all arrows that start from a given course
     function highlightArrows(courseId) {
+        const grid = document.getElementById('curriculum');
+        grid.classList.add('dimmed');
+
         document.querySelectorAll('.arrow').forEach(path => {
             path.classList.remove('highlighted');
             if (path.dataset.from === courseId || path.dataset.to === courseId) {
-                path.classList.add('highlighted');
+            path.classList.add('highlighted');
+            }
+        });
+
+        document.querySelectorAll('.course').forEach(el => {
+            el.classList.remove('active');
+            if (el.id === courseId) {
+            el.classList.add('active');
             }
         });
     }
     //Removes all arrow highlights (when hover ends)
     function clearHighlights() {
+        const grid = document.getElementById('curriculum');
+        grid.classList.remove('dimmed');
+
         document.querySelectorAll('.arrow').forEach(path => {
             path.classList.remove('highlighted');
+        });
+
+        document.querySelectorAll('.course').forEach(el => {
+            el.classList.remove('active');
         });
     }
     window.addEventListener('load', renderArrows);
