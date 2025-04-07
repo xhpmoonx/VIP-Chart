@@ -1,87 +1,102 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <title>Curriculum Graph - VIP Course</title>
-  <style>
-    body {
-      font-family: system-ui, sans-serif;
-      background: #f8fafc;
-      padding: 40px;
-    }
+    <head>
+        <meta charset="UTF-8" />
+            <title>Curriculum Graph - VIP Course</title>
+                <style>
+                    body {
+                    font-family: system-ui, sans-serif;
+                    background: #f8fafc;
+                    padding: 40px;
+                    }
 
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(3, 200px);
-      grid-template-rows: auto repeat(4, 100px) auto;
-      gap: 20px;
-      position: relative;
-      width: max-content;
-    }
+                    .grid {
+                    display: grid;
+                    grid-template-columns: repeat(3, 200px);
+                    grid-template-rows: auto repeat(4, 100px) auto;
+                    gap: 20px;
+                    position: relative;
+                    width: max-content;
+                    }
 
-    .term-header {
-      text-align: center;
-      font-weight: bold;
-      color: #0f172a;
-      font-size: 1.2em;
-      grid-row: 1;
-    }
+                    .term-header {
+                    text-align: center;
+                    font-weight: bold;
+                    color: #0f172a;
+                    font-size: 1.2em;
+                    grid-row: 1;
+                    }
 
-    .term-footer {
-      font-size: 0.9em;
-      color: #475569;
-      text-align: center;
-      grid-row: 6;
-    }
+                    .term-footer {
+                    font-size: 0.9em;
+                    color: #475569;
+                    text-align: center;
+                    grid-row: 6;
+                    }
 
-    .course {
-    background: transparent;
-    box-shadow: none;
-    border-radius: 0;
-    padding: 0;
-    z-index: 2;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    }
+                    .course {
+                    background: transparent;
+                    box-shadow: none;
+                    border-radius: 0;
+                    padding: 0;
+                    z-index: 2;
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    justify-content: center;
+                    }
 
 
-    .circle {
-      width: 30px;
-      height: 30px;
-      border-radius: 50%;
-      background: yellow;
-      border: 3px solid #ef4444;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: bold;
-      margin-bottom: 6px;
-    }
+                    .circle {
+                    width: 30px;
+                    height: 30px;
+                    border-radius: 50%;
+                    background: yellow;
+                    border: 3px solid #ef4444;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    font-weight: bold;
+                    margin-bottom: 6px;
+                    }
 
-    .label {
-      font-size: 0.85em;
-      color: #0f172a;
-      text-align: center;
-    }
+                    .label {
+                    font-size: 0.85em;
+                    color: #0f172a;
+                    text-align: center;
+                    }
 
-    svg {
-      position: absolute;
-      top: 0;
-      left: 0;
-      z-index: 10;
-      pointer-events: none; /*auto*/
-    }
+                    svg {
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    z-index: 10;
+                    pointer-events: none; /*auto*/
+                    }
 
-    .arrow {
-      stroke: #ef4444;
-      stroke-width: 2.5;
-      fill: none;
-      /*marker-end: url(#arrow);*/
-    }
-  </style>
-</head>
+                    .arrow {
+                    stroke: #ef4444;
+                    stroke-width: 2.5;
+                    fill: none;
+                    /*marker-end: url(#arrow);*/
+                    }
+                    .course:hover .circle {
+                        border-color: #3b82f6;
+                        box-shadow: 0 0 8px rgba(59, 130, 246, 0.5);
+                    }
+
+                    .arrow {
+                        transition: stroke 0.2s ease, opacity 0.2s ease;
+                        opacity: 0.3;
+                    }
+
+                    .arrow.highlighted {
+                        stroke: #3b82f6;
+                        opacity: 1;
+                    }
+
+                </style>
+    </head>
 <body>
 
   <div class="grid" id="curriculum">
@@ -90,7 +105,7 @@
         <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5"
         markerWidth="4" markerHeight="4" orient="auto">
         <!-- <path d="M0 0 L10 5 L0 10" fill="none" stroke="#ef4444" stroke-width="1.5"/> -->
-      </marker>
+        </marker>
       </defs>
     </svg>
 
@@ -140,12 +155,13 @@
   </div>
 
   <script>
+    //Defines all connections between courses
     const arrows = [
       { from: 'math101', to: 'phys101' },
       { from: 'engr101', to: 'cs101' },
       { from: 'cs101', to: 'engr102' },
     ];
-
+    //Draws one curved SVG arrow between two course circles
     function drawArrow(fromId, toId) {
         const svg = document.getElementById('svg');
         const fromCircle = document.querySelector(`#${fromId} .circle`);
@@ -165,20 +181,41 @@
 
         const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
         path.setAttribute("class", "arrow");
-        path.setAttribute(
-            "d",
-            `M ${startX} ${startY} C ${startX + curveAmount} ${startY}, ${endX - curveAmount} ${endY}, ${endX} ${endY}`
-        );
+        path.setAttribute("d",`M ${startX} ${startY} C ${startX + curveAmount} ${startY}, ${endX - curveAmount} ${endY}, ${endX} ${endY}`);
+        
+        // Store the source course ID so we can highlight it later
+        path.dataset.from = fromId;
+
         svg.appendChild(path);
         }
-
-function renderArrows() {
-  const svg = document.getElementById('svg');
-  svg.querySelectorAll('.arrow').forEach(e => e.remove()); // clear old arrows
-  arrows.forEach(({ from, to }) => {
-    drawArrow(from, to);
-  });
-}
+    //Clears and redraws all arrows, and adds hover listeners
+    function renderArrows() {
+        const svg = document.getElementById('svg');
+        //Remove all existing arrows from the SVG
+        svg.querySelectorAll('.arrow').forEach(e => e.remove()); 
+        //Loop through arrow list and draw each one
+        arrows.forEach(({ from, to }) => {drawArrow(from, to);});
+        //Add hover event listeners for interactivity
+        document.querySelectorAll('.course').forEach(el => {
+                el.addEventListener('mouseenter', () => highlightArrows(el.id));
+                el.addEventListener('mouseleave', clearHighlights);
+            });
+    }
+    //Highlights all arrows that start from a given course
+    function highlightArrows(courseId) {
+        document.querySelectorAll('.arrow').forEach(path => {
+            path.classList.remove('highlighted');
+            if (path.dataset.from === courseId) {
+            path.classList.add('highlighted');
+            }
+        });
+    }
+    //Removes all arrow highlights (when hover ends)
+    function clearHighlights() {
+        document.querySelectorAll('.arrow').forEach(path => {
+            path.classList.remove('highlighted');
+        });
+    }
     window.addEventListener('load', renderArrows);
     window.addEventListener('resize', renderArrows);
   </script>
