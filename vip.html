@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Curriculum Graph - VIP Course</title>
+  <style>
+    body {
+      font-family: system-ui, sans-serif;
+      background: #f8fafc;
+      padding: 40px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(3, 200px);
+      grid-template-rows: auto repeat(4, 100px) auto;
+      gap: 20px;
+      position: relative;
+      width: max-content;
+    }
+
+    .term-header {
+      text-align: center;
+      font-weight: bold;
+      color: #0f172a;
+      font-size: 1.2em;
+      grid-row: 1;
+    }
+
+    .term-footer {
+      font-size: 0.9em;
+      color: #475569;
+      text-align: center;
+      grid-row: 6;
+    }
+
+    .course {
+    background: transparent;
+    box-shadow: none;
+    border-radius: 0;
+    padding: 0;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    }
+
+
+    .circle {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      background: yellow;
+      border: 3px solid #ef4444;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      margin-bottom: 6px;
+    }
+
+    .label {
+      font-size: 0.85em;
+      color: #0f172a;
+      text-align: center;
+    }
+
+    svg {
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: 10;
+      pointer-events: none; /*auto*/
+    }
+
+    .arrow {
+      stroke: #ef4444;
+      stroke-width: 2.5;
+      fill: none;
+      /*marker-end: url(#arrow);*/
+    }
+  </style>
+</head>
+<body>
+
+  <div class="grid" id="curriculum">
+    <svg id="svg" width="1000" height="800">
+      <defs>
+        <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5"
+        markerWidth="4" markerHeight="4" orient="auto">
+        <!-- <path d="M0 0 L10 5 L0 10" fill="none" stroke="#ef4444" stroke-width="1.5"/> -->
+      </marker>
+      </defs>
+    </svg>
+
+    <!-- TERM 1 -->
+    <div class="term-header" style="grid-column: 1;">Fall</div>
+    <div class="course" id="math101" style="grid-column: 1; grid-row: 2;">
+      <div class="circle">4</div>
+      <div class="label">MATH 101<br>Calculus I</div>
+    </div>
+    <div class="course" id="engr101" style="grid-column: 1; grid-row: 3;">
+      <div class="circle">4</div>
+      <div class="label">ENGR 101<br>Intro to Eng</div>
+    </div>
+    <div class="course" id="ge1" style="grid-column: 1; grid-row: 4;">
+      <div class="circle">4</div>
+      <div class="label">GE 1<br>Writing</div>
+    </div>
+    <div class="term-footer" style="grid-column: 1;">Units: 12 | Complexity: 75</div>
+
+    <!-- TERM 2 -->
+    <div class="term-header" style="grid-column: 2;">Winter</div>
+    <div class="course" id="phys101" style="grid-column: 2; grid-row: 2;">
+      <div class="circle">4</div>
+      <div class="label">PHYS 101<br>Physics I</div>
+    </div>
+    <div class="course" id="cs101" style="grid-column: 2; grid-row: 3;">
+      <div class="circle">4</div>
+      <div class="label">CS 101<br>Intro to CS</div>
+    </div>
+    <div class="course" id="ge2" style="grid-column: 2; grid-row: 4;">
+      <div class="circle">4</div>
+      <div class="label">GE 2<br>Ethics</div>
+    </div>
+    <div class="term-footer" style="grid-column: 2;">Units: 12 | Complexity: 95</div>
+
+    <!-- TERM 3 -->
+    <div class="term-header" style="grid-column: 3;">Spring</div>
+    <div class="course" id="engr102" style="grid-column: 3; grid-row: 2;">
+      <div class="circle">4</div>
+      <div class="label">ENGR 102<br>Design Lab</div>
+    </div>
+    <div class="course" id="ge3" style="grid-column: 3; grid-row: 3;">
+      <div class="circle">4</div>
+      <div class="label">GE 3<br>Humanities</div>
+    </div>
+    <div class="term-footer" style="grid-column: 3;">Units: 8 | Complexity: 60</div>
+  </div>
+
+  <script>
+    const arrows = [
+      { from: 'math101', to: 'phys101' },
+      { from: 'engr101', to: 'cs101' },
+      { from: 'cs101', to: 'engr102' },
+    ];
+
+    function drawArrow(fromId, toId) {
+        const svg = document.getElementById('svg');
+        const fromCircle = document.querySelector(`#${fromId} .circle`);
+        const toCircle = document.querySelector(`#${toId} .circle`);
+        const svgRect = svg.getBoundingClientRect();
+
+        const from = fromCircle.getBoundingClientRect();
+        const to = toCircle.getBoundingClientRect();
+
+        const startX = from.right - svgRect.left;
+        const startY = from.top + from.height / 2 - svgRect.top;
+
+        const endX = to.left - svgRect.left;
+        const endY = to.top + to.height / 2 - svgRect.top;
+
+        const curveAmount = (endX - startX) / 2;
+
+        const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+        path.setAttribute("class", "arrow");
+        path.setAttribute(
+            "d",
+            `M ${startX} ${startY} C ${startX + curveAmount} ${startY}, ${endX - curveAmount} ${endY}, ${endX} ${endY}`
+        );
+        svg.appendChild(path);
+        }
+
+function renderArrows() {
+  const svg = document.getElementById('svg');
+  svg.querySelectorAll('.arrow').forEach(e => e.remove()); // clear old arrows
+  arrows.forEach(({ from, to }) => {
+    drawArrow(from, to);
+  });
+}
+    window.addEventListener('load', renderArrows);
+    window.addEventListener('resize', renderArrows);
+  </script>
+</body>
+</html>
