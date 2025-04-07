@@ -185,6 +185,7 @@
         
         // Store the source course ID so we can highlight it later
         path.dataset.from = fromId;
+        path.dataset.to = toId;
 
         svg.appendChild(path);
         }
@@ -205,8 +206,8 @@
     function highlightArrows(courseId) {
         document.querySelectorAll('.arrow').forEach(path => {
             path.classList.remove('highlighted');
-            if (path.dataset.from === courseId) {
-            path.classList.add('highlighted');
+            if (path.dataset.from === courseId || path.dataset.to === courseId) {
+                path.classList.add('highlighted');
             }
         });
     }
