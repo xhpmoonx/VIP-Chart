@@ -12,7 +12,7 @@
 
                     .grid {
                     display: grid;
-                    grid-template-columns: repeat(3, 200px);
+                    grid-template-columns: repeat(5, 200px);
                     grid-template-rows: auto repeat(4, 100px) auto;
                     gap: 20px;
                     position: relative;
@@ -185,7 +185,32 @@
       <div class="label">GE 3<br>Humanities</div>
     </div>
     <div class="term-footer" style="grid-column: 3;">Units: 8 | Complexity: 60</div>
+    <!-- TERM 4 -->
+    <div class="term-header" style="grid-column: 4;">Summer</div>
+    <div class="course" id="stat201" style="grid-column: 4; grid-row: 2;">
+      <div class="circle">4</div>
+      <div class="label"><strong>STAT 201</strong><br>Probability</div>
+    </div>
+    <div class="course" id="ge4" style="grid-column: 4; grid-row: 3;">
+      <div class="circle">4</div>
+      <div class="label"><strong>GE 4</strong><br>Communication</div>
+    </div>
+    <div class="term-footer" style="grid-column: 4;">Units: 8 | Complexity: 55</div>
+  
+    <!-- TERM 5 -->
+    <div class="term-header" style="grid-column: 5;">Fall Y2</div>
+    <div class="course" id="math201" style="grid-column: 5; grid-row: 2;">
+      <div class="circle">4</div>
+      <div class="label"><strong>MATH 201</strong><br>Linear Algebra</div>
+    </div>
+    <div class="course" id="cs201" style="grid-column: 5; grid-row: 3;">
+      <div class="circle">4</div>
+      <div class="label"><strong>CS 201</strong><br>Data Structures</div>
+    </div>
+    <div class="term-footer" style="grid-column: 5;">Units: 8 | Complexity: 65</div>
+  
   </div>
+
 
   <script>
     //Defines all connections between courses
@@ -193,6 +218,9 @@
       { from: 'math101', to: 'phys101' },
       { from: 'engr101', to: 'cs101' },
       { from: 'cs101', to: 'engr102' },
+      { from: 'phys101', to: 'stat201' },
+      { from: 'stat201', to: 'math201' },
+      { from: 'cs101', to: 'cs201' },
     ];
     //Draws one curved SVG arrow between two course circles
     function drawArrow(fromId, toId) {
@@ -210,12 +238,13 @@
         const endX = to.left - svgRect.left;
         const endY = to.top + to.height / 2 - svgRect.top;
 
-        const curveAmount = (endX - startX) / 2;
+        const curveY = 30; //makes it subtler or more pronounced
+        const dx = endX - startX;
+        const curveX = Math.max(40, Math.min(dx / 2, 80)); // horizontal curve
 
         const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
         path.setAttribute("class", "arrow");
-        path.setAttribute("d",`M ${startX} ${startY} C ${startX + curveAmount} ${startY}, ${endX - curveAmount} ${endY}, ${endX} ${endY}`);
-        
+        path.setAttribute("d",`M ${startX} ${startY} C ${startX + curveX} ${startY - curveY}, ${endX - curveX} ${endY - curveY}, ${endX} ${endY}`);        
         // Store the source course ID so we can highlight it later
         path.dataset.from = fromId;
         path.dataset.to = toId;
