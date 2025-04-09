@@ -46,19 +46,65 @@
                     justify-content: center;
                     }
 
-
+                    /* Base Circle Style */
                     .circle {
-                    width: 30px;
-                    height: 30px;
-                    border-radius: 50%;
-                    background: yellow;
-                    border: 3px solid #ef4444;
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    font-weight: bold;
-                    margin-bottom: 6px;
+                      width: 30px;
+                      height: 30px;
+                      font-weight: bold;
+                      display: flex;
+                      align-items: center;
+                      justify-content: center;
+                      margin-bottom: 6px;
+                      background: yellow;
+                      border: 3px solid #ef4444;
                     }
+
+                    /* Core: Default Circle */
+                    .course[data-type="core"] .circle {
+                      border-radius: 50%;
+                    }
+
+                    /* GE: Square */
+                    .course[data-type="ge"] .circle {
+                      border-radius: 8px;
+                    }
+
+                    /* Elective: Pill shape */
+                    .course[data-type="elective"] .circle {
+                      border-radius: 999px;
+                      width: 60px;
+                      height: 28px;
+                    }
+
+                    .triangle {
+                    position: relative;
+                    width: 0;
+                    height: 0;
+                    border-left: 20px solid transparent;
+                    border-right: 20px solid transparent;
+                    border-bottom: 35px solid yellow;
+                    margin-bottom: 6px;
+                  }
+                  .triangle::before {
+                    content: "";
+                    position: absolute;
+                    top: -4px;
+                    left: -24px;
+                    border-left: 24px solid transparent;
+                    border-right: 24px solid transparent;
+                    border-bottom: 42px solid #ef4444;
+                    z-index: -1;
+                  }
+                  .triangle::after {
+                    content: attr(data-units);
+                    position: absolute;
+                    top: 10px;
+                    left: 50%;
+                    transform: translateX(-50%);
+                    color: black;
+                    font-weight: bold;
+                    font-size: 0.9em;
+                  }
 
                     .label {
                     font-size: 0.85em;
@@ -217,150 +263,130 @@
             </marker>
           </defs>
         </svg>
-    
-        <!-- TERM 1 -->
-        <div class="term-header" style="grid-column: 1;">Fall</div>
-        <div class="course" id="math101" style="grid-column: 1; grid-row: 2;">
+            <!-- TERM 1 -->
+        <div class="course" id="math101" data-type="core" style="grid-column: 1; grid-row: 2;">
           <div class="circle">4</div>
           <div class="label">MATH 101<br>Calculus I</div>
         </div>
-        <div class="course" id="engr101" style="grid-column: 1; grid-row: 3;">
+        <div class="course" id="engr101" data-type="core" style="grid-column: 1; grid-row: 3;">
           <div class="circle">4</div>
           <div class="label">ENGR 101<br>Intro to Eng</div>
         </div>
-        <div class="course" id="ge1" style="grid-column: 1; grid-row: 4;">
+        <div class="course" id="ge1" data-type="ge" style="grid-column: 1; grid-row: 4;">
           <div class="circle">4</div>
           <div class="label">GE 1<br>Writing</div>
         </div>
-        <div class="course" id="ge-math" style="grid-column: 1; grid-row: 5;">
+        <div class="course" id="ge-math" data-type="ge" style="grid-column: 1; grid-row: 5;">
           <div class="circle">4</div>
           <div class="label">GE MATH<br>Reasoning</div>
         </div>
-        <div class="course" id="ge-hist" style="grid-column: 1; grid-row: 6;">
+        <div class="course" id="ge-hist" data-type="ge" style="grid-column: 1; grid-row: 6;">
           <div class="circle">4</div>
           <div class="label">GE HIST<br>US History</div>
         </div>
-        
-        <div class="term-footer" style="grid-column: 1; grid-row: 7;">Units: 20 | Complexity: 95</div>
-    
+
         <!-- TERM 2 -->
-        <div class="term-header" style="grid-column: 2;">Winter</div>
-        <div class="course" id="phys101" style="grid-column: 2; grid-row: 2;">
+        <div class="course" id="phys101" data-type="core" style="grid-column: 2; grid-row: 2;">
           <div class="circle">4</div>
           <div class="label">PHYS 101<br>Physics I</div>
         </div>
-        <div class="course" id="cs101" style="grid-column: 2; grid-row: 3;">
+        <div class="course" id="cs101" data-type="core" style="grid-column: 2; grid-row: 3;">
           <div class="circle">4</div>
           <div class="label">CS 101<br>Intro to CS</div>
         </div>
-        <div class="course" id="ge2" style="grid-column: 2; grid-row: 4;">
+        <div class="course" id="ge2" data-type="ge" style="grid-column: 2; grid-row: 4;">
           <div class="circle">4</div>
           <div class="label">GE 2<br>Ethics</div>
         </div>
-        <div class="course" id="bio101" style="grid-column: 2; grid-row: 5;">
+        <div class="course" id="bio101" data-type="elective" style="grid-column: 2; grid-row: 5;">
           <div class="circle">4</div>
           <div class="label">BIO 101<br>Biology I</div>
         </div>
-        
-        <div class="term-footer" style="grid-column: 2; grid-row: 7;">Units: 16 | Complexity: 85</div>
-    
+
         <!-- TERM 3 -->
-        <div class="term-header" style="grid-column: 3;">Spring</div>
-        <div class="course" id="engr102" style="grid-column: 3; grid-row: 2;">
+        <div class="course" id="engr102" data-type="core" style="grid-column: 3; grid-row: 2;">
           <div class="circle">4</div>
           <div class="label">ENGR 102<br>Design Lab</div>
         </div>
-        <div class="course" id="ge3" style="grid-column: 3; grid-row: 3;">
+        <div class="course" id="ge3" data-type="ge" style="grid-column: 3; grid-row: 3;">
           <div class="circle">4</div>
           <div class="label">GE 3<br>Humanities</div>
         </div>
-        <div class="course" id="math102" style="grid-column: 3; grid-row: 5;">
+        <div class="course" id="math102" data-type="core" style="grid-column: 3; grid-row: 5;">
           <div class="circle">4</div>
           <div class="label">MATH 102<br>Calculus II</div>
         </div>
-        
-        <div class="term-footer" style="grid-column: 3; grid-row: 7;">Units: 12 | Complexity: 70</div>
+
         <!-- TERM 4 -->
-        <div class="term-header" style="grid-column: 4;">Summer</div>
-        <div class="course" id="stat201" style="grid-column: 4; grid-row: 2;">
+        <div class="course" id="stat201" data-type="core" style="grid-column: 4; grid-row: 2;">
           <div class="circle">4</div>
           <div class="label"><strong>STAT 201</strong><br>Probability</div>
         </div>
-        <div class="course" id="ge4" style="grid-column: 4; grid-row: 3;">
+        <div class="course" id="ge4" data-type="ge" style="grid-column: 4; grid-row: 3;">
           <div class="circle">4</div>
           <div class="label"><strong>GE 4</strong><br>Communication</div>
         </div>
-        <div class="course" id="stat202" style="grid-column: 4; grid-row: 5;">
+        <div class="course" id="stat202" data-type="core" style="grid-column: 4; grid-row: 5;">
           <div class="circle">4</div>
           <div class="label">STAT 202<br>Inferential Stats</div>
         </div>
-        
-        <div class="term-footer" style="grid-column: 4; grid-row: 7;">Units: 12 | Complexity: 65</div>
-      
+
         <!-- TERM 5 -->
-        <div class="term-header" style="grid-column: 5;">Fall Y2</div>
-        <div class="course" id="math201" style="grid-column: 5; grid-row: 2;">
+        <div class="course" id="math201" data-type="core" style="grid-column: 5; grid-row: 2;">
           <div class="circle">4</div>
           <div class="label"><strong>MATH 201</strong><br>Linear Algebra</div>
         </div>
-        <div class="course" id="cs201" style="grid-column: 5; grid-row: 3;">
+        <div class="course" id="cs201" data-type="core" style="grid-column: 5; grid-row: 3;">
           <div class="circle">4</div>
           <div class="label"><strong>CS 201</strong><br>Data Structures</div>
         </div>
-        <div class="course" id="cs220" style="grid-column: 5; grid-row: 5;">
+        <div class="course" id="cs220" data-type="elective" style="grid-column: 5; grid-row: 5;">
           <div class="circle">4</div>
           <div class="label">CS 220<br>Databases</div>
         </div>
-        
-        <div class="term-footer" style="grid-column: 5; grid-row: 7;">Units: 12 | Complexity: 80</div>
+
         <!-- TERM 6 -->
-    <div class="term-header" style="grid-column: 6;">Winter Y2</div>
-    <div class="course" id="cs202" style="grid-column: 6; grid-row: 2;">
-      <div class="circle">4</div>
-      <div class="label">CS 202<br>Algorithms</div>
-    </div>
-    <div class="course" id="ge5" style="grid-column: 6; grid-row: 3;">
-      <div class="circle">4</div>
-      <div class="label">GE 5<br>Society</div>
-    </div>
-    <div class="course" id="cs221" style="grid-column: 6; grid-row: 5;">
-      <div class="circle">4</div>
-      <div class="label">CS 221<br>AI Concepts</div>
-    </div>
-    <div class="term-footer" style="grid-column: 6; grid-row: 7;">Units: 12 | Complexity: 90</div>
-    
-    <!-- TERM 7 -->
-    <div class="term-header" style="grid-column: 7;">Spring Y2</div>
-    <div class="course" id="engr201" style="grid-column: 7; grid-row: 2;">
-      <div class="circle">4</div>
-      <div class="label">ENGR 201<br>Systems Design</div>
-    </div>
-    <div class="course" id="math202" style="grid-column: 7; grid-row: 3;">
-      <div class="circle">4</div>
-      <div class="label">MATH 202<br>Differential Eq.</div>
-    </div>
-    <div class="course" id="math230" style="grid-column: 7; grid-row: 5;">
-      <div class="circle">4</div>
-      <div class="label">MATH 230<br>Discrete Math</div>
-    </div>
-    <div class="term-footer" style="grid-column: 7; grid-row: 7;">Units: 12 | Complexity: 95</div>
-    
-    <!-- TERM 8 -->
-    <div class="term-header" style="grid-column: 8;">Fall Y3</div>
-    <div class="course" id="capstone" style="grid-column: 8; grid-row: 2;">
-      <div class="circle">4</div>
-      <div class="label">CAPSTONE<br>Project</div>
-    </div>
-    <div class="course" id="ge6" style="grid-column: 8; grid-row: 3;">
-      <div class="circle">4</div>
-      <div class="label">GE 6<br>Global Studies</div>
-    </div>
-    <div class="course" id="ethics300" style="grid-column: 8; grid-row: 5;">
-      <div class="circle">4</div>
-      <div class="label">ETHICS 300<br>Engineering Ethics</div>
-    </div>
-    <div class="term-footer" style="grid-column: 8; grid-row: 7;">Units: 12 | Complexity: 100</div>
-    
+        <div class="course" id="cs202" data-type="core" style="grid-column: 6; grid-row: 2;">
+          <div class="circle">4</div>
+          <div class="label">CS 202<br>Algorithms</div>
+        </div>
+        <div class="course" id="ge5" data-type="ge" style="grid-column: 6; grid-row: 3;">
+          <div class="circle">4</div>
+          <div class="label">GE 5<br>Society</div>
+        </div>
+        <div class="course" id="cs221" data-type="capstone" style="grid-column: 6; grid-row: 5;">
+          <div class="circle">4</div>
+          <div class="label">CS 221<br>AI Concepts</div>
+        </div>
+
+        <!-- TERM 7 -->
+        <div class="course" id="engr201" data-type="core" style="grid-column: 7; grid-row: 2;">
+          <div class="circle">4</div>
+          <div class="label">ENGR 201<br>Systems Design</div>
+        </div>
+        <div class="course" id="math202" data-type="core" style="grid-column: 7; grid-row: 3;">
+          <div class="circle">4</div>
+          <div class="label">MATH 202<br>Differential Eq.</div>
+        </div>
+        <div class="course" id="math230" data-type="core" style="grid-column: 7; grid-row: 5;">
+          <div class="circle">4</div>
+          <div class="label">MATH 230<br>Discrete Math</div>
+        </div>
+
+        <!-- TERM 8 -->
+        <div class="course" id="capstone" data-type="capstone" style="grid-column: 8; grid-row: 2;">
+          <div class="triangle" data-units="4"></div>
+          <div class="label">CAPSTONE<br>Project</div>
+        </div>
+        <div class="course" id="ge6" data-type="ge" style="grid-column: 8; grid-row: 3;">
+          <div class="circle">4</div>
+          <div class="label">GE 6<br>Global Studies</div>
+        </div>
+        <div class="course" id="ethics300" data-type="ge" style="grid-column: 8; grid-row: 5;">
+          <div class="circle">4</div>
+          <div class="label">ETHICS 300<br>Engineering Ethics</div>
+        </div>
+
       </div>    
     </div>
   
@@ -402,12 +428,13 @@
     //Draws one curved SVG arrow between two course circles
     function drawArrow(fromId, toId) {
         const svg = document.getElementById('svg');
-        const fromCircle = document.querySelector(`#${fromId} .circle`);
-        const toCircle = document.querySelector(`#${toId} .circle`);
+        const fromShape = document.querySelector(`#${fromId} .circle, #${fromId} .triangle`);
+        const toShape = document.querySelector(`#${toId} .circle, #${toId} .triangle`);
+
         const svgRect = svg.getBoundingClientRect();
 
-        const from = fromCircle.getBoundingClientRect();
-        const to = toCircle.getBoundingClientRect();
+        const from = fromShape.getBoundingClientRect();
+        const to = toShape.getBoundingClientRect();
 
         const startX = from.right - svgRect.left;
         const startY = from.top + from.height / 2 - svgRect.top;
