@@ -126,11 +126,83 @@
                     display: none;
                     white-space: nowrap;
                     }
+                    .key {
+                    position: absolute;
+                    top: 40px;
+                    right: 40px;
+                    background: white;
+                    border: 1px solid #cbd5e1;
+                    border-radius: 12px;
+                    padding: 16px;
+                    font-size: 0.9em;
+                    color: #0f172a;
+                    box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+                    z-index: 50;
+                    width: 180px;
+                  }
+
+                  .key h3 {
+                    margin-top: 0;
+                    font-size: 1em;
+                    margin-bottom: 8px;
+                  }
+
+                  .key ul {
+                    list-style: none;
+                    padding: 0;
+                    margin: 0;
+                  }
+
+                  .key li {
+                    display: flex;
+                    align-items: center;
+                    margin-bottom: 6px;
+                  }
+
+                  .key .circle.example {
+                    width: 22px;
+                    height: 22px;
+                    font-size: 0.8em;
+                    margin-right: 10px;
+                    background: yellow;
+                    border: 2px solid #ef4444;
+                  }
+
+                  .key-line {
+                    display: inline-block;
+                    width: 30px;
+                    height: 3px;
+                    margin-right: 10px;
+                    background: #ef4444;
+                  }
+
+                  .key-line.prereq {
+                    opacity: 0.3;
+                  }
+
+                  .key-line.blocked {
+                    background: #3b82f6;
+                  }
+
+                  .key-line.all {
+                    background: #475569;
+                  }
+
 
 
                 </style>
     </head>
 <body>
+  <div class="key">
+    <h3>Key</h3>
+    <ul>
+      <li><span class="circle example">4</span> = Course Units</li>
+      <li><span class="key-line prereq"></span> Prerequisite</li>
+      <li><span class="key-line blocked"></span> Directly Blocked</li>
+      <li><span class="key-line all"></span> All Dependencies</li>
+    </ul>
+  </div>
+  
     <div id="popup" class="popup"></div>
   <div class="grid" id="curriculum">
     <svg id="svg" width="1000" height="800">
