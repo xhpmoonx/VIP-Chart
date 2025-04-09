@@ -12,8 +12,8 @@
 
                     .grid {
                     display: grid;
-                    grid-template-columns: repeat(5, 200px);
-                    grid-template-rows: auto repeat(4, 100px) auto;
+                    grid-template-columns: repeat(8, 200px);
+                    grid-template-rows: auto repeat(7, 100px) auto;
                     gap: 20px;
                     position: relative;
                     width: max-content;
@@ -156,7 +156,16 @@
       <div class="circle">4</div>
       <div class="label">GE 1<br>Writing</div>
     </div>
-    <div class="term-footer" style="grid-column: 1;">Units: 12 | Complexity: 75</div>
+    <div class="course" id="ge-math" style="grid-column: 1; grid-row: 5;">
+      <div class="circle">4</div>
+      <div class="label">GE MATH<br>Reasoning</div>
+    </div>
+    <div class="course" id="ge-hist" style="grid-column: 1; grid-row: 6;">
+      <div class="circle">4</div>
+      <div class="label">GE HIST<br>US History</div>
+    </div>
+    
+    <div class="term-footer" style="grid-column: 1; grid-row: 7;">Units: 20 | Complexity: 95</div>
 
     <!-- TERM 2 -->
     <div class="term-header" style="grid-column: 2;">Winter</div>
@@ -172,7 +181,12 @@
       <div class="circle">4</div>
       <div class="label">GE 2<br>Ethics</div>
     </div>
-    <div class="term-footer" style="grid-column: 2;">Units: 12 | Complexity: 95</div>
+    <div class="course" id="bio101" style="grid-column: 2; grid-row: 5;">
+      <div class="circle">4</div>
+      <div class="label">BIO 101<br>Biology I</div>
+    </div>
+    
+    <div class="term-footer" style="grid-column: 2; grid-row: 7;">Units: 16 | Complexity: 85</div>
 
     <!-- TERM 3 -->
     <div class="term-header" style="grid-column: 3;">Spring</div>
@@ -184,7 +198,12 @@
       <div class="circle">4</div>
       <div class="label">GE 3<br>Humanities</div>
     </div>
-    <div class="term-footer" style="grid-column: 3;">Units: 8 | Complexity: 60</div>
+    <div class="course" id="math102" style="grid-column: 3; grid-row: 5;">
+      <div class="circle">4</div>
+      <div class="label">MATH 102<br>Calculus II</div>
+    </div>
+    
+    <div class="term-footer" style="grid-column: 3; grid-row: 7;">Units: 12 | Complexity: 70</div>
     <!-- TERM 4 -->
     <div class="term-header" style="grid-column: 4;">Summer</div>
     <div class="course" id="stat201" style="grid-column: 4; grid-row: 2;">
@@ -195,7 +214,12 @@
       <div class="circle">4</div>
       <div class="label"><strong>GE 4</strong><br>Communication</div>
     </div>
-    <div class="term-footer" style="grid-column: 4;">Units: 8 | Complexity: 55</div>
+    <div class="course" id="stat202" style="grid-column: 4; grid-row: 5;">
+      <div class="circle">4</div>
+      <div class="label">STAT 202<br>Inferential Stats</div>
+    </div>
+    
+    <div class="term-footer" style="grid-column: 4; grid-row: 7;">Units: 12 | Complexity: 65</div>
   
     <!-- TERM 5 -->
     <div class="term-header" style="grid-column: 5;">Fall Y2</div>
@@ -207,8 +231,60 @@
       <div class="circle">4</div>
       <div class="label"><strong>CS 201</strong><br>Data Structures</div>
     </div>
-    <div class="term-footer" style="grid-column: 5;">Units: 8 | Complexity: 65</div>
-  
+    <div class="course" id="cs220" style="grid-column: 5; grid-row: 5;">
+      <div class="circle">4</div>
+      <div class="label">CS 220<br>Databases</div>
+    </div>
+    
+    <div class="term-footer" style="grid-column: 5; grid-row: 7;">Units: 12 | Complexity: 80</div>
+    <!-- TERM 6 -->
+<div class="term-header" style="grid-column: 6;">Winter Y2</div>
+<div class="course" id="cs202" style="grid-column: 6; grid-row: 2;">
+  <div class="circle">4</div>
+  <div class="label">CS 202<br>Algorithms</div>
+</div>
+<div class="course" id="ge5" style="grid-column: 6; grid-row: 3;">
+  <div class="circle">4</div>
+  <div class="label">GE 5<br>Society</div>
+</div>
+<div class="course" id="cs221" style="grid-column: 6; grid-row: 5;">
+  <div class="circle">4</div>
+  <div class="label">CS 221<br>AI Concepts</div>
+</div>
+<div class="term-footer" style="grid-column: 6; grid-row: 7;">Units: 12 | Complexity: 90</div>
+
+<!-- TERM 7 -->
+<div class="term-header" style="grid-column: 7;">Spring Y2</div>
+<div class="course" id="engr201" style="grid-column: 7; grid-row: 2;">
+  <div class="circle">4</div>
+  <div class="label">ENGR 201<br>Systems Design</div>
+</div>
+<div class="course" id="math202" style="grid-column: 7; grid-row: 3;">
+  <div class="circle">4</div>
+  <div class="label">MATH 202<br>Differential Eq.</div>
+</div>
+<div class="course" id="math230" style="grid-column: 7; grid-row: 5;">
+  <div class="circle">4</div>
+  <div class="label">MATH 230<br>Discrete Math</div>
+</div>
+<div class="term-footer" style="grid-column: 7; grid-row: 7;">Units: 12 | Complexity: 95</div>
+
+<!-- TERM 8 -->
+<div class="term-header" style="grid-column: 8;">Fall Y3</div>
+<div class="course" id="capstone" style="grid-column: 8; grid-row: 2;">
+  <div class="circle">4</div>
+  <div class="label">CAPSTONE<br>Project</div>
+</div>
+<div class="course" id="ge6" style="grid-column: 8; grid-row: 3;">
+  <div class="circle">4</div>
+  <div class="label">GE 6<br>Global Studies</div>
+</div>
+<div class="course" id="ethics300" style="grid-column: 8; grid-row: 5;">
+  <div class="circle">4</div>
+  <div class="label">ETHICS 300<br>Engineering Ethics</div>
+</div>
+<div class="term-footer" style="grid-column: 8; grid-row: 7;">Units: 12 | Complexity: 100</div>
+
   </div>
 
 
@@ -221,7 +297,21 @@
       { from: 'phys101', to: 'stat201' },
       { from: 'stat201', to: 'math201' },
       { from: 'cs101', to: 'cs201' },
+      { from: 'math201', to: 'cs202' },
+      { from: 'cs201', to: 'cs202' },
+      { from: 'cs202', to: 'engr201' },
+      { from: 'math202', to: 'capstone' },
+      { from: 'engr201', to: 'capstone' },
+      { from: 'math101', to: 'math102' },
+      { from: 'math102', to: 'stat202' },
+      { from: 'stat202', to: 'cs220' },
+      { from: 'cs220', to: 'cs221' },
+      { from: 'cs221', to: 'capstone' },
+      { from: 'math102', to: 'math202' },
+      { from: 'math101', to: 'math230' },
+      { from: 'math230', to: 'cs221' },
     ];
+
     //Draws one curved SVG arrow between two course circles
     function drawArrow(fromId, toId) {
         const svg = document.getElementById('svg');
@@ -254,6 +344,11 @@
     //Clears and redraws all arrows, and adds hover listeners
     function renderArrows() {
         const svg = document.getElementById('svg');
+        const grid = document.getElementById('curriculum');
+        const gridRect = grid.getBoundingClientRect();
+
+        svg.setAttribute('width', grid.scrollWidth);
+        svg.setAttribute('height', grid.scrollHeight);
         //Remove all existing arrows from the SVG
         svg.querySelectorAll('.arrow').forEach(e => e.remove()); 
         //Loop through arrow list and draw each one
