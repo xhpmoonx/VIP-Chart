@@ -4,6 +4,7 @@
         <meta charset="UTF-8" />
             <title>Curriculum Graph - VIP Course</title>
                 <style>
+                  
                     body {
                     font-family: system-ui, sans-serif;
                     background: #f8fafc;
@@ -75,37 +76,40 @@
                       width: 60px;
                       height: 28px;
                     }
-
-                    .triangle {
+                    
+                    .course[data-type="capstone"] .triangle {
                     position: relative;
                     width: 0;
                     height: 0;
-                    border-left: 20px solid transparent;
-                    border-right: 20px solid transparent;
-                    border-bottom: 35px solid yellow;
-                    margin-bottom: 6px;
-                  }
-                  .triangle::before {
-                    content: "";
-                    position: absolute;
-                    top: -4px;
-                    left: -24px;
                     border-left: 24px solid transparent;
                     border-right: 24px solid transparent;
-                    border-bottom: 42px solid #ef4444;
-                    z-index: -1;
+                    border-bottom: 42px solid #ef4444; /* default red outer */
+                    margin-bottom: 6px;
                   }
-                  .triangle::after {
+
+
+                                      .course[data-type="capstone"] .triangle::after {
                     content: attr(data-units);
                     position: absolute;
                     top: 10px;
                     left: 50%;
                     transform: translateX(-50%);
-                    color: black;
                     font-weight: bold;
                     font-size: 0.9em;
+                    color: black;
+                    z-index: 2;
+                    pointer-events: none;
                   }
-
+                  .course[data-type="capstone"] .triangle::before {
+                    content: "";
+                    position: absolute;
+                    top: 4px;
+                    left: -20px;
+                    border-left: 20px solid transparent;
+                    border-right: 20px solid transparent;
+                    border-bottom: 34px solid yellow;
+                    z-index: 1;
+                  }                    
                     .label {
                     font-size: 0.85em;
                     color: #0f172a;
@@ -130,6 +134,10 @@
                         border-color: #3b82f6;
                         box-shadow: 0 0 8px rgba(59, 130, 246, 0.5);
                     }
+                    .course:hover[data-type="capstone"] .triangle {
+                        border-bottom-color: #3b82f6; /* blue outer */
+                        filter: drop-shadow(0 0 6px rgba(59, 130, 246, 0.5));
+                      }
 
                     .arrow {
                         transition: stroke 0.2s ease, opacity 0.2s ease;
