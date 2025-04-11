@@ -44,7 +44,8 @@
                     display: flex;
                     flex-direction: column;
                     align-items: center;
-                    justify-content: center;
+                    justify-content: flex-start;
+
                     }
 
                     /* Base Circle Style */
@@ -76,9 +77,9 @@
                       width: 60px;
                       height: 28px;
                     }
-                    
                     .course[data-type="capstone"] .triangle {
                     position: relative;
+                    background: none !important;
                     width: 0;
                     height: 0;
                     border-left: 24px solid transparent;
@@ -86,9 +87,8 @@
                     border-bottom: 42px solid #ef4444; /* default red outer */
                     margin-bottom: 6px;
                   }
-
-
-                                      .course[data-type="capstone"] .triangle::after {
+                    .course[data-type="capstone"] .triangle::after {
+                      background: none !important;
                     content: attr(data-units);
                     position: absolute;
                     top: 10px;
@@ -101,6 +101,7 @@
                     pointer-events: none;
                   }
                   .course[data-type="capstone"] .triangle::before {
+                    background: none !important;
                     content: "";
                     position: absolute;
                     top: 4px;
@@ -110,20 +111,29 @@
                     border-bottom: 34px solid yellow;
                     z-index: 1;
                   }   
-                  /* Unmet Prereqs – triangle orange */
-                  .course.unmet[data-type="capstone"] .triangle {
-                    border-bottom-color: rgb(51, 139, 216);
+                  /* Directly Blocked */
+                  .course.direct-blocked .circle,
+                  .course.direct-blocked .triangle {
+                    border-color: #1a835b !important;
+                    box-shadow: 0 0 6px rgba(5, 90, 226, 0.79) !important;
+                  }
+                  .course.direct-blocked .circle {
+                    background: #e0f2fe !important;
                   }
 
-                  .course.unmet[data-type="capstone"] .triangle::before {
-                    border-bottom-color: #b6f895; /* pale yellow fill */
+                  /* Indirectly Blocked */
+                  .course.indirect-blocked .circle,
+                  .course.indirect-blocked .triangle {
+                    border-color: #70a3e0 !important;
                   }
 
-                  /* Optional: for other shapes too */
-                  .course.unmet .circle {
-                    border-color: orange;
+                  /* Dependency (prereqs) */
+                  .course.dependency .circle,
+                  .course.dependency .triangle {
+                    border-color: #381a04 !important;
                   }
-             
+
+
                     .label {
                     font-size: 0.85em;
                     color: #0f172a;
@@ -341,13 +351,13 @@
       div.style.gridColumn = course.term;
       div.style.gridRow = course.row;
 
-      const shapeType = course.type === "capstone" ? "triangle" : "circle";
       const shapeEl = document.createElement("div");
-      shapeEl.className = shapeType;
 
       if (course.type === "capstone") {
+        shapeEl.classList.add("triangle");
         shapeEl.dataset.units = course.units;
       } else {
+        shapeEl.classList.add("circle");
         shapeEl.textContent = course.units;
       }
 
@@ -409,18 +419,26 @@
         svg.querySelectorAll('.arrow').forEach(e => e.remove()); 
         //Loop through arrow list and draw each one
         arrows.forEach(({ from, to }) => {drawArrow(from, to);});
-        //Add hover event listeners for interactivity
-        document.querySelectorAll('.course').forEach(el => {
-                el.addEventListener('mouseenter', () => highlightArrows(el.id));
-                el.addEventListener('mouseleave', clearHighlights);
-            });
-        //Add click listeners to all courses to show popup info
-            document.querySelectorAll('.course').forEach(course => {
-                course.addEventListener('click', (e) => {
-                    e.stopPropagation();
-                    showCourseInfo(course);
-                });
-                });
+        document.querySelectorAll('.course').forEach(course => {
+        course.addEventListener('mouseenter', () => {
+          highlightArrows(course.id); // highlight dependencies on hover
+        });
+
+        course.addEventListener('mouseleave', () => {
+          clearHighlights(); // remove highlights when mouse leaves
+        });
+
+        course.addEventListener('click', (e) => {
+          e.stopPropagation(); // prevent body click from clearing popup
+          showCourseInfo(course); // show info popup
+        });
+      });
+
+      // Hide popup when clicking anywhere else
+      document.addEventListener('click', () => {
+        document.getElementById('popup').style.display = 'none';
+      });
+
         //Hide popup if you click anywhere else on the page
             document.addEventListener('click', () => {
             document.getElementById('popup').style.display = 'none';
@@ -428,36 +446,79 @@
     }
     //Highlights all arrows that start from a given course
     function highlightArrows(courseId) {
-        const grid = document.getElementById('curriculum');
-        grid.classList.add('dimmed');
+  const grid = document.getElementById('curriculum');
+  grid.classList.add('dimmed');
 
-        document.querySelectorAll('.arrow').forEach(path => {
-            path.classList.remove('highlighted');
-            if (path.dataset.from === courseId || path.dataset.to === courseId) {
-            path.classList.add('highlighted');
-            }
-        });
-
-        document.querySelectorAll('.course').forEach(el => {
-            el.classList.remove('active');
-            if (el.id === courseId) {
-            el.classList.add('active');
-            }
-        });
+  document.querySelectorAll('.arrow').forEach(path => {
+    path.classList.remove('highlighted');
+    if (path.dataset.from === courseId || path.dataset.to === courseId) {
+      path.classList.add('highlighted');
     }
+  });
+
+  // Clear all highlight classes
+  document.querySelectorAll('.course').forEach(el => {
+    el.classList.remove('active', 'direct-blocked', 'indirect-blocked', 'dependency');
+  });
+
+  const directlyBlocked = arrows
+    .filter(a => a.from === courseId)
+    .map(a => a.to);
+
+  const indirectlyBlocked = new Set();
+  const visited = new Set();
+  const queue = [...directlyBlocked];
+
+  while (queue.length) {
+    const current = queue.shift();
+    if (!visited.has(current)) {
+      visited.add(current);
+      indirectlyBlocked.add(current);
+      arrows
+        .filter(a => a.from === current)
+        .forEach(a => queue.push(a.to));
+    }
+  }
+
+  const dependsOn = arrows
+    .filter(a => a.to === courseId)
+    .map(a => a.from);
+
+  // Set classes
+  document.getElementById(courseId).classList.add('active');
+
+  directlyBlocked.forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.classList.add('direct-blocked');
+  });
+
+  indirectlyBlocked.forEach(id => {
+    if (!directlyBlocked.includes(id)) {
+      const el = document.getElementById(id);
+      if (el) el.classList.add('indirect-blocked');
+    }
+  });
+
+  dependsOn.forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.classList.add('dependency');
+  });
+}
+
     //Removes all arrow highlights (when hover ends)
     function clearHighlights() {
-        const grid = document.getElementById('curriculum');
-        grid.classList.remove('dimmed');
+      const grid = document.getElementById('curriculum');
+      grid.classList.remove('dimmed');
 
-        document.querySelectorAll('.arrow').forEach(path => {
-            path.classList.remove('highlighted');
-        });
+      document.querySelectorAll('.arrow').forEach(path => {
+        path.classList.remove('highlighted');
+      });
 
-        document.querySelectorAll('.course').forEach(el => {
-            el.classList.remove('active');
-        });
+      document.querySelectorAll('.course').forEach(el => {
+        el.classList.remove('active', 'direct-blocked', 'indirect-blocked', 'dependency');
+      });
     }
+
     //Show popup box with course info (prereqs and dependencies)
     function showCourseInfo(courseEl) {
   const id = courseEl.id;
