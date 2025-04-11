@@ -14,7 +14,7 @@
                     .grid {
                     display: grid;
                     grid-template-columns: repeat(8, 200px);
-                    grid-template-rows: auto repeat(7, 100px) auto;
+                    grid-template-rows: repeat(7, 100px) auto;
                     gap: 20px;
                     position: relative;
                     width: max-content;
@@ -111,20 +111,19 @@
                     z-index: 1;
                   }   
                   /* Unmet Prereqs – triangle orange */
-.course.unmet[data-type="capstone"] .triangle {
-  border-bottom-color: rgb(51, 139, 216);
-}
+                  .course.unmet[data-type="capstone"] .triangle {
+                    border-bottom-color: rgb(51, 139, 216);
+                  }
 
-.course.unmet[data-type="capstone"] .triangle::before {
-  border-bottom-color: #b6f895; /* pale yellow fill */
-}
+                  .course.unmet[data-type="capstone"] .triangle::before {
+                    border-bottom-color: #b6f895; /* pale yellow fill */
+                  }
 
-/* Optional: for other shapes too */
-.course.unmet .circle {
-  border-color: orange;
-}
-
-                 
+                  /* Optional: for other shapes too */
+                  .course.unmet .circle {
+                    border-color: orange;
+                  }
+             
                     .label {
                     font-size: 0.85em;
                     color: #0f172a;
@@ -460,27 +459,48 @@
         });
     }
     //Show popup box with course info (prereqs and dependencies)
-    function showCourseInfo(course) {
-        const id = course.id;
-        const name = course.querySelector('.label')?.innerText.split('\n')[0] || id;
+    function showCourseInfo(courseEl) {
+  const id = courseEl.id;
+  const course = curriculum.find(c => c.id === id);
+  if (!course) return;
 
-        const prereqs = arrows.filter(a => a.from === id).map(a => a.to);
-        const dependsOn = arrows.filter(a => a.to === id).map(a => a.from);
+  const prereqFor = arrows.filter(a => a.from === id).map(a => a.to);
+  const dependsOn = arrows.filter(a => a.to === id).map(a => a.from);
 
-        const lines = [];
-        lines.push(`<strong>${name}</strong>`);
-        if (prereqs.length) lines.push("• Prerequisite for: " + prereqs.join(", "));
-        if (dependsOn.length) lines.push("• Depends on: " + dependsOn.join(", "));
-        if (!prereqs.length && !dependsOn.length) lines.push("• No direct links");
+  const lines = [];
+  lines.push(`<strong>${course.label.replace('\n', ' ')}</strong>`);
+  lines.push(`Units: ${course.units}`);
 
-        const popup = document.getElementById('popup');
-        popup.innerHTML = lines.join("<br>");
+  if (dependsOn.length) {
+    const labels = dependsOn.map(depId =>
+      curriculum.find(c => c.id === depId)?.label?.split('\n')[0] || depId
+    );
+    lines.push("Depends on: " + labels.join(", "));
+  }
 
-        const rect = course.getBoundingClientRect();
-        popup.style.left = `${rect.right + 10 + window.scrollX}px`;
-        popup.style.top = `${rect.top + window.scrollY}px`;
-        popup.style.display = 'block';
-    }
+  if (prereqFor.length) {
+    const labels = prereqFor.map(prId =>
+      curriculum.find(c => c.id === prId)?.label?.split('\n')[0] || prId
+    );
+    lines.push("Prerequisite for: " + labels.join(", "));
+  }
+
+  if (!dependsOn.length && !prereqFor.length) {
+    lines.push("No direct connections");
+  }
+
+  const popup = document.getElementById('popup');
+  popup.innerHTML = lines.join("<br>");
+  popup.style.display = 'block';
+
+  // 🧠 Get the actual screen position of the course element
+  const rect = courseEl.getBoundingClientRect();
+
+  // ✅ Position the popup relative to the screen (fixed)
+  popup.style.position = 'fixed';
+  popup.style.left = `${rect.left}px`;
+  popup.style.top = `${rect.bottom + 6}px`; // 6px below the course
+}
 
     window.addEventListener('load', renderArrows);
     window.addEventListener('resize', renderArrows);
