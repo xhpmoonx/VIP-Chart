@@ -5,278 +5,790 @@
             <title>Curriculum Graph - VIP Course</title>
                 <style>
                   
-                    body {
-                    font-family: system-ui, sans-serif;
-                    background: #f8fafc;
-                    padding: 40px;
-                    }
+body {
+  font-family: system-ui, sans-serif;
+  background: #f8fafc;
+  padding: 40px;
+}
 
-                    .grid {
-                    display: grid;
-                    grid-template-columns: repeat(8, 200px);
-                    grid-template-rows: repeat(7, 100px) auto;
-                    gap: 20px;
-                    position: relative;
-                    width: max-content;
-                    }
+.grid {
+  display: grid;
+  grid-template-columns: repeat(8, 200px);
+  grid-template-rows: repeat(7, 100px) auto;
+  gap: 20px;
+  position: relative;
+  width: max-content;
+}
 
-                    .term-header {
-                    text-align: center;
-                    font-weight: bold;
-                    color: #0f172a;
-                    font-size: 1.2em;
-                    grid-row: 1;
-                    }
+.course {
+  background: transparent;
+  box-shadow: none;
+  border-radius: 0;
+  padding: 0;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+}
 
-                    .term-footer {
-                    font-size: 0.9em;
-                    color: #475569;
-                    text-align: center;
-                    grid-row: 6;
-                    }
+/* Circle (default) */
+.circle {
+  width: 30px;
+  height: 30px;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 6px;
+  background: yellow;
+  border: 3px solid #ef4444;
+}
 
-                    .course {
-                    background: transparent;
-                    box-shadow: none;
-                    border-radius: 0;
-                    padding: 0;
-                    z-index: 2;
-                    display: flex;
-                    flex-direction: column;
-                    align-items: center;
-                    justify-content: flex-start;
+/* Circle types */
+.course[data-type="core"] .circle {
+  border-radius: 50%;
+}
 
-                    }
+.course[data-type="ge"] .circle {
+  border-radius: 8px;
+}
 
-                    /* Base Circle Style */
-                    .circle {
-                      width: 30px;
-                      height: 30px;
-                      font-weight: bold;
-                      display: flex;
-                      align-items: center;
-                      justify-content: center;
-                      margin-bottom: 6px;
-                      background: yellow;
-                      border: 3px solid #ef4444;
-                    }
+.course[data-type="elective"] .circle {
+  border-radius: 999px;
+  width: 60px;
+  height: 28px;
+}
 
-                    /* Core: Default Circle */
-                    .course[data-type="core"] .circle {
-                      border-radius: 50%;
-                    }
+/* Triangle (capstone) outer */
+.triangle {
+  position: relative;
+  width: 0;
+  height: 0;
+  border-left: 24px solid transparent;
+  border-right: 24px solid transparent;
+  border-bottom: 42px solid #ef4444;
+  margin-bottom: 6px;
+}
 
-                    /* GE: Square */
-                    .course[data-type="ge"] .circle {
-                      border-radius: 8px;
-                    }
+/* Triangle fill */
+.triangle::before {
+  content: "";
+  position: absolute;
+  top: 4px;
+  left: -20px;
+  border-left: 20px solid transparent;
+  border-right: 20px solid transparent;
+  border-bottom: 34px solid yellow;
+  z-index: 1;
+}
 
-                    /* Elective: Pill shape */
-                    .course[data-type="elective"] .circle {
-                      border-radius: 999px;
-                      width: 60px;
-                      height: 28px;
-                    }
-                    .course[data-type="capstone"] .triangle {
-                    position: relative;
-                    background: none !important;
-                    width: 0;
-                    height: 0;
-                    border-left: 24px solid transparent;
-                    border-right: 24px solid transparent;
-                    border-bottom: 42px solid #ef4444; /* default red outer */
-                    margin-bottom: 6px;
-                  }
-                    .course[data-type="capstone"] .triangle::after {
-                      background: none !important;
-                    content: attr(data-units);
-                    position: absolute;
-                    top: 10px;
-                    left: 50%;
-                    transform: translateX(-50%);
-                    font-weight: bold;
-                    font-size: 0.9em;
-                    color: black;
-                    z-index: 2;
-                    pointer-events: none;
-                  }
-                  .course[data-type="capstone"] .triangle::before {
-                    background: none !important;
-                    content: "";
-                    position: absolute;
-                    top: 4px;
-                    left: -20px;
-                    border-left: 20px solid transparent;
-                    border-right: 20px solid transparent;
-                    border-bottom: 34px solid yellow;
-                    z-index: 1;
-                  }   
-                  /* Directly Blocked */
-                  .course.direct-blocked .circle,
-                  .course.direct-blocked .triangle {
-                    border-color: #1a835b !important;
-                    box-shadow: 0 0 6px rgba(5, 90, 226, 0.79) !important;
-                  }
-                  .course.direct-blocked .circle {
-                    background: #e0f2fe !important;
-                  }
+/* Triangle units text */
+.triangle::after {
+  content: attr(data-units);
+  position: absolute;
+  top: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-weight: bold;
+  font-size: 0.9em;
+  color: black;
+  z-index: 2;
+  pointer-events: none;
+}
 
-                  /* Indirectly Blocked */
-                  .course.indirect-blocked .circle,
-                  .course.indirect-blocked .triangle {
-                    border-color: #70a3e0 !important;
-                  }
+/* Highlight states */
+.course.direct-blocked .circle {
+  background: #e0f2fe;
+  border-color: #1a835b;
+}
 
-                  /* Dependency (prereqs) */
-                  .course.dependency .circle,
-                  .course.dependency .triangle {
-                    border-color: #381a04 !important;
-                  }
+.course.direct-blocked .triangle {
+  border-bottom-color: #1a835b;
+}
 
+.course.direct-blocked .triangle::before {
+  border-bottom-color: #e0f2fe;
+}
 
-                    .label {
-                    font-size: 0.85em;
-                    color: #0f172a;
-                    text-align: center;
-                    }
+.course.indirect-blocked .circle {
+  background: #f0f9ff;
+  border-color: #70a3e0;
+}
 
-                    svg {
-                    position: absolute;
-                    top: 0;
-                    left: 0;
-                    z-index: 10;
-                    pointer-events: none; /*auto*/
-                    }
+.course.indirect-blocked .triangle {
+  border-bottom-color: #70a3e0;
+}
 
-                    .arrow {
-                    stroke: #ef4444;
-                    stroke-width: 2.5;
-                    fill: none;
-                    /*marker-end: url(#arrow);*/
-                    }
-                    .course:hover .circle {
-                        border-color: #3b82f6;
-                        box-shadow: 0 0 8px rgba(59, 130, 246, 0.5);
-                    }
-                    .course:hover[data-type="capstone"] .triangle {
-                        border-bottom-color: #3b82f6; /* blue outer */
-                        filter: drop-shadow(0 0 6px rgba(59, 130, 246, 0.5));
-                      }
+.course.indirect-blocked .triangle::before {
+  border-bottom-color: #f0f9ff;
+}
 
-                    .arrow {
-                        transition: stroke 0.2s ease, opacity 0.2s ease;
-                        opacity: 0.3;
-                    }
+.course.dependency .circle {
+  border-color: #381a04;
+}
 
-                    .arrow.highlighted {
-                        stroke: #3b82f6;
-                        opacity: 1;
-                    }
-                    /* dim all arrows/courses when a focus is active */
-                    .grid.dimmed .course:not(.active) .circle {
-                    border-color: #94a3b8;
-                    background: #f1f5f9;
-                    color: #94a3b8;
-                    opacity: 0.3;
-                    box-shadow: none;
-                    }
+.course.dependency .triangle {
+  border-bottom-color: #381a04;
+}
 
-                    .grid.dimmed .arrow:not(.highlighted) {
-                    opacity: 0.1;
-                    }
+/* Hover state */
+.course:hover .circle {
+  border-color: #3b82f6;
+  box-shadow: 0 0 8px rgba(59, 130, 246, 0.5);
+}
 
-                    .course.active .circle {
-                    border-color: #3b82f6;
-                    background: yellow;
-                    box-shadow: 0 0 8px rgba(59, 130, 246, 0.5);
-                    }
-                    .popup {
-                    position: absolute;
-                    background: white;
-                    border: 1px solid #cbd5e1;
-                    border-radius: 8px;
-                    padding: 10px 14px;
-                    font-size: 0.85em;
-                    color: #0f172a;
-                    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-                    pointer-events: none;
-                    z-index: 20;
-                    display: none;
-                    white-space: nowrap;
-                    }
+.course:hover .triangle {
+  border-bottom-color: #3b82f6;
+  filter: drop-shadow(0 0 6px rgba(59, 130, 246, 0.5));
+}
 
-                    .layout {
-                      display: grid;
-                      grid-template-columns: 1fr 200px;
-                      height: 100vh;
-                      overflow: hidden;
-                    }
+/* Grid dimmed state */
+.grid.dimmed .course:not(.active) .circle {
+  border-color: #94a3b8;
+  background: #f1f5f9;
+  color: #94a3b8;
+  opacity: 0.3;
+  box-shadow: none;
+}
 
-                    .main-content {
-                      overflow: auto;
-                      padding: 40px;
-                      position: relative;
-                    }
+.grid.dimmed .arrow:not(.highlighted) {
+  opacity: 0.1;
+}
 
-                    .key {
-                      background: white;
-                      border-left: 1px solid #e2e8f0;
-                      padding: 20px;
-                      font-size: 0.9em;
-                      color: #0f172a;
-                      box-shadow: -2px 0 8px rgba(0,0,0,0.04);
-                      height: 100%;
-                      position: relative;
-                      z-index: 10;
-                    }
+.course.active .circle {
+  border-color: #3b82f6;
+  background: yellow;
+  box-shadow: 0 0 8px rgba(59, 130, 246, 0.5);
+}
 
 
-                  .key h3 {
-                    margin-top: 0;
-                    font-size: 1em;
-                    margin-bottom: 8px;
-                  }
+.label {
+  font-size: 0.85em;
+  color: #0f172a;
+  text-align: center;
+}
 
-                  .key ul {
-                    list-style: none;
-                    padding: 0;
-                    margin: 0;
-                  }
+.arrow {
+  stroke: #ef4444;
+  stroke-width: 2.5;
+  fill: none;
+  opacity: 0.3;
+  transition: stroke 0.2s ease, opacity 0.2s ease;
+}
 
-                  .key li {
-                    display: flex;
-                    align-items: center;
-                    margin-bottom: 6px;
-                  }
+.arrow.highlighted {
+  stroke: #3b82f6;
+  opacity: 1;
+}
 
-                  .key .circle.example {
-                    width: 22px;
-                    height: 22px;
-                    font-size: 0.8em;
-                    margin-right: 10px;
-                    background: yellow;
-                    border: 2px solid #ef4444;
-                  }
+.popup {
+  position: absolute;
+  background: white;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-size: 0.85em;
+  color: #0f172a;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  pointer-events: none;
+  z-index: 20;
+  display: none;
+  white-space: nowrap;
+}
 
-                  .key-line {
-                    display: inline-block;
-                    width: 30px;
-                    height: 3px;
-                    margin-right: 10px;
-                    background: #ef4444;
-                  }
+svg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 10;
+  pointer-events: none;
+}
 
-                  .key-line.prereq {
-                    opacity: 0.3;
-                  }
+.layout {
+  display: grid;
+  grid-template-columns: 1fr 200px;
+  height: 100vh;
+  overflow: hidden;
+}
 
-                  .key-line.blocked {
-                    background: #3b82f6;
-                  }
+.main-content {
+  overflow: auto;
+  padding: 40px;
+  position: relative;
+}
 
-                  .key-line.all {
-                    background: #475569;
-                  }
+.key {
+  background: white;
+  border-left: 1px solid #e2e8f0;
+  padding: 20px;
+  font-size: 0.9em;
+  color: #0f172a;
+  box-shadow: -2px 0 8px rgba(0,0,0,0.04);
+  height: 100%;
+  position: relative;
+  z-index: 10;
+}
+
+.key .circle.example {
+  width: 22px;
+  height: 22px;
+  font-size: 0.8em;
+  margin-right: 10px;
+  background: yellow;
+  border: 2px solid #ef4444;
+}
+
+.key-line {
+  display: inline-block;
+  width: 30px;
+  height: 3px;
+  margin-right: 10px;
+  background: #ef4444;
+}
+
+.key-line.prereq {
+  opacity: 0.3;
+}
+
+.key-line.blocked {
+  background: #3b82f6;
+}
+
+.key-line.all {
+  background: #475569;
+}
+
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(8, 200px);
+  grid-template-rows: repeat(7, 100px) auto;
+  gap: 20px;
+  position: relative;
+  width: max-content;
+}
+
+.course {
+  background: transparent;
+  padding: 0;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+/* === SHAPES === */
+
+/* Default circle */
+.circle {
+  width: 30px;
+  height: 30px;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 6px;
+  background: yellow;
+  border: 3px solid #ef4444;
+}
+
+/* Core: rounded */
+.course[data-type="core"] .circle {
+  border-radius: 50%;
+}
+
+/* GE: square */
+.course[data-type="ge"] .circle {
+  border-radius: 8px;
+}
+
+/* Elective: pill */
+.course[data-type="elective"] .circle {
+  border-radius: 999px;
+  width: 60px;
+  height: 28px;
+}
+
+/* Capstone: triangle */
+.course[data-type="capstone"] .triangle {
+  position: relative;
+  width: 0;
+  height: 0;
+  border-left: 24px solid transparent;
+  border-right: 24px solid transparent;
+  border-bottom: 42px solid #ef4444;
+  margin-bottom: 6px;
+}
+
+/* Triangle inner yellow fill */
+.course[data-type="capstone"] .triangle::before {
+  content: "";
+  position: absolute;
+  top: 4px;
+  left: -20px;
+  border-left: 20px solid transparent;
+  border-right: 20px solid transparent;
+  border-bottom: 34px solid yellow;
+  z-index: 1;
+}
+
+/* Units label */
+.course[data-type="capstone"] .triangle::after {
+  content: attr(data-units);
+  position: absolute;
+  top: 8px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-weight: bold;
+  font-size: 0.9em;
+  color: black;
+  z-index: 2;
+  pointer-events: none;
+}
+
+/* === LABEL === */
+.label {
+  font-size: 0.85em;
+  color: #0f172a;
+  text-align: center;
+}
+
+/* === STATES === */
+
+/* Hover effect */
+.course:hover .circle {
+  border-color: #3b82f6;
+  box-shadow: 0 0 8px rgba(59, 130, 246, 0.5);
+}
+
+.course:hover[data-type="capstone"] .triangle {
+  border-bottom-color: #3b82f6;
+  filter: drop-shadow(0 0 6px rgba(59, 130, 246, 0.5));
+}
+
+/* Directly Blocked */
+.course.direct-blocked .circle {
+  background: #e0f2fe;
+  border-color: #1a835b;
+  box-shadow: 0 0 6px rgba(5, 90, 226, 0.79);
+}
+
+.course.direct-blocked .triangle {
+  border-bottom-color: #1a835b;
+  filter: drop-shadow(0 0 6px rgba(5, 90, 226, 0.79));
+}
+
+/* Indirectly Blocked */
+.course.indirect-blocked .circle {
+  background: #f1f5f9;
+  border-color: #70a3e0;
+  opacity: 0.6;
+}
+
+.course.indirect-blocked .triangle {
+  border-bottom-color: #70a3e0;
+  opacity: 0.6;
+}
+
+/* Dependency */
+.course.dependency .circle {
+  background: #fef3c7;
+  border-color: #381a04;
+}
+
+.course.dependency .triangle {
+  border-bottom-color: #381a04;
+}
+
+/* === Arrows === */
+svg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 10;
+  pointer-events: none;
+}
+
+.arrow {
+  stroke: #ef4444;
+  stroke-width: 2.5;
+  fill: none;
+  transition: stroke 0.2s ease, opacity 0.2s ease;
+  opacity: 0.3;
+}
+
+.arrow.highlighted {
+  stroke: #3b82f6;
+  opacity: 1;
+}
+
+/* === Popup === */
+.popup {
+  position: absolute;
+  background: white;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-size: 0.85em;
+  color: #0f172a;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  pointer-events: none;
+  z-index: 20;
+  display: none;
+  white-space: nowrap;
+}
+
+/* === Dim + Active === */
+.grid.dimmed .course:not(.active) .circle {
+  border-color: #94a3b8;
+  background: #f1f5f9;
+  color: #94a3b8;
+  opacity: 0.3;
+  box-shadow: none;
+}
+
+.grid.dimmed .arrow:not(.highlighted) {
+  opacity: 0.1;
+}
+
+.course.active .circle {
+  border-color: #3b82f6;
+  background: yellow;
+  box-shadow: 0 0 8px rgba(59, 130, 246, 0.5);
+}
+
+/* === Key Sidebar === */
+.key {
+  background: white;
+  border-left: 1px solid #e2e8f0;
+  padding: 20px;
+  font-size: 0.9em;
+  color: #0f172a;
+  box-shadow: -2px 0 8px rgba(0,0,0,0.04);
+  height: 100%;
+  position: relative;
+  z-index: 10;
+}
+
+.key h3 {
+  margin-top: 0;
+  font-size: 1em;
+  margin-bottom: 8px;
+}
+
+.key ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.key li {
+  display: flex;
+  align-items: center;
+  margin-bottom: 6px;
+}
+
+.key .circle.example {
+  width: 22px;
+  height: 22px;
+  font-size: 0.8em;
+  margin-right: 10px;
+  background: yellow;
+  border: 2px solid #ef4444;
+}
+
+.key-line {
+  display: inline-block;
+  width: 30px;
+  height: 3px;
+  margin-right: 10px;
+  background: #ef4444;
+}
+
+.key-line.prereq {
+  opacity: 0.3;
+}
+
+.key-line.blocked {
+  background: #3b82f6;
+}
+
+.key-line.all {
+  background: #475569;
+}
+
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(8, 200px);
+  grid-template-rows: repeat(7, 100px) auto;
+  gap: 20px;
+  position: relative;
+  width: max-content;
+}
+
+.term-header {
+  text-align: center;
+  font-weight: bold;
+  color: #0f172a;
+  font-size: 1.2em;
+  grid-row: 1;
+}
+
+.term-footer {
+  font-size: 0.9em;
+  color: #475569;
+  text-align: center;
+  grid-row: 6;
+}
+
+.course {
+  background: transparent;
+  padding: 0;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+/* === Circles & Base Shapes === */
+.circle {
+  width: 30px;
+  height: 30px;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 6px;
+  background-color: yellow;
+  border-radius: 50%;
+  transition: background-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.course[data-type="ge"] .circle {
+  border-radius: 8px;
+}
+
+.course[data-type="elective"] .circle {
+  border-radius: 999px;
+  width: 60px;
+  height: 28px;
+}
+
+/* === Triangle Shape === */
+/* Base triangle structure */
+.triangle {
+  position: relative;
+  width: 0;
+  height: 0;
+  border-left: 24px solid transparent;
+  border-right: 24px solid transparent;
+  border-bottom: 42px solid #ef4444;
+  margin-bottom: 6px;
+}
+
+/* Inner triangle for background fill */
+.triangle::before {
+  content: "";
+  position: absolute;
+  top: 4px;
+  left: -20px;
+  border-left: 20px solid transparent;
+  border-right: 20px solid transparent;
+  border-bottom: 34px solid yellow; /* default fill */
+  z-index: 1;
+}
+
+/* Units text inside triangle */
+.triangle::after {
+  content: attr(data-units);
+  position: absolute;
+  top: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-weight: bold;
+  font-size: 0.9em;
+  color: black;
+  z-index: 2;
+  pointer-events: none;
+}
+
+
+
+/* === Hover / Active === */
+.course:hover .circle {
+  background-color: #e0f2fe;
+  box-shadow: 0 0 8px rgba(59, 130, 246, 0.5);
+}
+
+.course:hover[data-type="capstone"] .triangle {
+  border-bottom-color: #3b82f6;
+  filter: drop-shadow(0 0 6px rgba(59, 130, 246, 0.5));
+}
+
+.course.active .circle {
+  background-color: #fef08a;
+  box-shadow: 0 0 8px rgba(59, 130, 246, 0.5);
+}
+
+.course.active .triangle::before {
+  border-bottom-color: #fef08a;
+}
+
+/* === State-based Backgrounds === */
+.course.direct-blocked .circle {
+  background-color: #d1fae5 !important;
+}
+
+.course.indirect-blocked .circle {
+  background-color: #dbeafe !important;
+  opacity: 0.6;
+}
+
+.course.dependency .circle {
+  background-color: #fde68a !important;
+}
+
+.course.direct-blocked .triangle::before {
+  border-bottom-color: #d1fae5 !important;
+}
+
+.course.indirect-blocked .triangle::before {
+  border-bottom-color: #dbeafe !important;
+  opacity: 0.6;
+}
+
+.course.dependency .triangle::before {
+  border-bottom-color: #fde68a !important;
+}
+
+/* === Dimming when one course is focused === */
+.grid.dimmed .course:not(.active) .circle {
+  background-color: #f1f5f9;
+  color: #94a3b8;
+  opacity: 0.3;
+  box-shadow: none;
+}
+
+.grid.dimmed .course:not(.active) .triangle::before {
+  border-bottom-color: #f1f5f9;
+  opacity: 0.3;
+}
+
+.grid.dimmed .arrow:not(.highlighted) {
+  opacity: 0.1;
+}
+
+/* === Arrows === */
+.arrow {
+  stroke: #ef4444;
+  stroke-width: 2.5;
+  fill: none;
+  transition: stroke 0.2s ease, opacity 0.2s ease;
+  opacity: 0.3;
+}
+
+.arrow.highlighted {
+  stroke: #3b82f6;
+  opacity: 1;
+}
+
+/* === Misc === */
+.label {
+  font-size: 0.85em;
+  color: #0f172a;
+  text-align: center;
+}
+
+.popup {
+  position: absolute;
+  background: white;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-size: 0.85em;
+  color: #0f172a;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  pointer-events: none;
+  z-index: 20;
+  display: none;
+  white-space: nowrap;
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: 1fr 200px;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.main-content {
+  overflow: auto;
+  padding: 40px;
+  position: relative;
+}
+
+.key {
+  background: white;
+  border-left: 1px solid #e2e8f0;
+  padding: 20px;
+  font-size: 0.9em;
+  color: #0f172a;
+  box-shadow: -2px 0 8px rgba(0,0,0,0.04);
+  height: 100%;
+  position: relative;
+  z-index: 10;
+}
+
+.key h3 {
+  margin-top: 0;
+  font-size: 1em;
+  margin-bottom: 8px;
+}
+
+.key ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.key li {
+  display: flex;
+  align-items: center;
+  margin-bottom: 6px;
+}
+
+.key .circle.example {
+  width: 22px;
+  height: 22px;
+  font-size: 0.8em;
+  margin-right: 10px;
+  background: yellow;
+  border: 2px solid #ef4444;
+}
+
+.key-line {
+  display: inline-block;
+  width: 30px;
+  height: 3px;
+  margin-right: 10px;
+  background: #ef4444;
+}
+
+.key-line.prereq {
+  opacity: 0.3;
+}
+
+.key-line.blocked {
+  background: #3b82f6;
+}
+
+.key-line.all {
+  background: #475569;
+}
 
                 </style>
     </head>
@@ -344,31 +856,32 @@
 
 
     function createCourse(course) {
-      const div = document.createElement("div");
-      div.className = "course";
-      div.id = course.id;
-      div.dataset.type = course.type;
-      div.style.gridColumn = course.term;
-      div.style.gridRow = course.row;
+  const div = document.createElement("div");
+  div.className = "course";
+  div.id = course.id;
+  div.dataset.type = course.type;
+  div.style.gridColumn = course.term;
+  div.style.gridRow = course.row;
 
-      const shapeEl = document.createElement("div");
+  const shapeEl = document.createElement("div");
 
-      if (course.type === "capstone") {
-        shapeEl.classList.add("triangle");
-        shapeEl.dataset.units = course.units;
-      } else {
-        shapeEl.classList.add("circle");
-        shapeEl.textContent = course.units;
-      }
+  if (course.type === "capstone") {
+    shapeEl.className = "triangle";
+    shapeEl.dataset.units = course.units;
+  } else {
+    shapeEl.className = "circle";
+    shapeEl.textContent = course.units;
+  }
 
-      const label = document.createElement("div");
-      label.className = "label";
-      label.innerHTML = course.label;
+  const label = document.createElement("div");
+  label.className = "label";
+  label.innerHTML = course.label;
 
-      div.appendChild(shapeEl);
-      div.appendChild(label);
-      return div;
-    }
+  div.appendChild(shapeEl);
+  div.appendChild(label);
+  return div;
+}
+
 
     function renderCourses() {
       const grid = document.getElementById("curriculum");
@@ -456,52 +969,54 @@
     }
   });
 
-  // Clear all highlight classes
+  // 🔄 Reset previous highlights
   document.querySelectorAll('.course').forEach(el => {
     el.classList.remove('active', 'direct-blocked', 'indirect-blocked', 'dependency');
   });
 
-  const directlyBlocked = arrows
+  // 🔵 1. Mark clicked course as active
+  document.getElementById(courseId)?.classList.add('active');
+
+  // 🔵 2. Mark direct dependents
+  const direct = arrows
     .filter(a => a.from === courseId)
     .map(a => a.to);
 
-  const indirectlyBlocked = new Set();
-  const visited = new Set();
-  const queue = [...directlyBlocked];
+  direct.forEach(id => {
+    document.getElementById(id)?.classList.add('direct-blocked');
+  });
+
+  // 🔵 3. Mark indirect dependents
+  const indirect = new Set();
+  const queue = [...direct];
+  const visited = new Set(direct);
 
   while (queue.length) {
     const current = queue.shift();
-    if (!visited.has(current)) {
-      visited.add(current);
-      indirectlyBlocked.add(current);
-      arrows
-        .filter(a => a.from === current)
-        .forEach(a => queue.push(a.to));
-    }
+    arrows
+      .filter(a => a.from === current)
+      .forEach(a => {
+        if (!visited.has(a.to)) {
+          indirect.add(a.to);
+          queue.push(a.to);
+          visited.add(a.to);
+        }
+      });
   }
 
-  const dependsOn = arrows
+  indirect.forEach(id => {
+    if (!direct.includes(id)) {
+      document.getElementById(id)?.classList.add('indirect-blocked');
+    }
+  });
+
+  // 🔵 4. Mark dependencies (prereqs)
+  const prereqs = arrows
     .filter(a => a.to === courseId)
     .map(a => a.from);
 
-  // Set classes
-  document.getElementById(courseId).classList.add('active');
-
-  directlyBlocked.forEach(id => {
-    const el = document.getElementById(id);
-    if (el) el.classList.add('direct-blocked');
-  });
-
-  indirectlyBlocked.forEach(id => {
-    if (!directlyBlocked.includes(id)) {
-      const el = document.getElementById(id);
-      if (el) el.classList.add('indirect-blocked');
-    }
-  });
-
-  dependsOn.forEach(id => {
-    const el = document.getElementById(id);
-    if (el) el.classList.add('dependency');
+  prereqs.forEach(id => {
+    document.getElementById(id)?.classList.add('dependency');
   });
 }
 
