@@ -681,6 +681,17 @@ svg {
 .grid.dimmed .arrow:not(.highlighted) {
   opacity: 0.1;
 }
+.course.dimmed-triangle .triangle {
+  border-bottom-color: #f1f5f9 !important;
+  filter: none !important;
+  opacity: 0.3;
+}
+
+.course.dimmed-triangle .triangle::before {
+  border-bottom-color: #f1f5f9 !important;
+  opacity: 0.3;
+}
+
 
 /* === Arrows === */
 .arrow {
@@ -962,6 +973,7 @@ svg {
   const grid = document.getElementById('curriculum');
   grid.classList.add('dimmed');
 
+  // Highlight connected arrows
   document.querySelectorAll('.arrow').forEach(path => {
     path.classList.remove('highlighted');
     if (path.dataset.from === courseId || path.dataset.to === courseId) {
@@ -969,40 +981,36 @@ svg {
     }
   });
 
-  // 🔄 Reset previous highlights
+  // Remove all visual states
   document.querySelectorAll('.course').forEach(el => {
-    el.classList.remove('active', 'direct-blocked', 'indirect-blocked', 'dependency');
+    el.classList.remove('active', 'direct-blocked', 'indirect-blocked', 'dependency', 'dimmed-triangle');
   });
 
-  // 🔵 1. Mark clicked course as active
-  document.getElementById(courseId)?.classList.add('active');
+  const activeCourse = document.getElementById(courseId);
+  if (activeCourse) activeCourse.classList.add('active');
 
-  // 🔵 2. Mark direct dependents
-  const direct = arrows
-    .filter(a => a.from === courseId)
-    .map(a => a.to);
+  const direct = arrows.filter(a => a.from === courseId).map(a => a.to);
+  const indirect = new Set();
+  const prereqs = arrows.filter(a => a.to === courseId).map(a => a.from);
 
+  // Get all indirect blocked
+  const visited = new Set(direct);
+  const queue = [...direct];
+  while (queue.length) {
+    const current = queue.shift();
+    arrows.filter(a => a.from === current).forEach(a => {
+      if (!visited.has(a.to)) {
+        visited.add(a.to);
+        indirect.add(a.to);
+        queue.push(a.to);
+      }
+    });
+  }
+
+  // Apply styles
   direct.forEach(id => {
     document.getElementById(id)?.classList.add('direct-blocked');
   });
-
-  // 🔵 3. Mark indirect dependents
-  const indirect = new Set();
-  const queue = [...direct];
-  const visited = new Set(direct);
-
-  while (queue.length) {
-    const current = queue.shift();
-    arrows
-      .filter(a => a.from === current)
-      .forEach(a => {
-        if (!visited.has(a.to)) {
-          indirect.add(a.to);
-          queue.push(a.to);
-          visited.add(a.to);
-        }
-      });
-  }
 
   indirect.forEach(id => {
     if (!direct.includes(id)) {
@@ -1010,29 +1018,46 @@ svg {
     }
   });
 
-  // 🔵 4. Mark dependencies (prereqs)
-  const prereqs = arrows
-    .filter(a => a.to === courseId)
-    .map(a => a.from);
-
   prereqs.forEach(id => {
     document.getElementById(id)?.classList.add('dependency');
   });
+
+  // Now, dim unrelated triangles ONLY
+  document.querySelectorAll('.course').forEach(course => {
+    const related =
+      course.id === courseId ||
+      direct.includes(course.id) ||
+      indirect.has(course.id) ||
+      prereqs.includes(course.id);
+
+    const triangle = course.querySelector('.triangle');
+    if (triangle && !related) {
+      course.classList.add('dimmed-triangle');
+    }
+  });
 }
+
 
     //Removes all arrow highlights (when hover ends)
     function clearHighlights() {
-      const grid = document.getElementById('curriculum');
-      grid.classList.remove('dimmed');
+  const grid = document.getElementById('curriculum');
+  grid.classList.remove('dimmed');
 
-      document.querySelectorAll('.arrow').forEach(path => {
-        path.classList.remove('highlighted');
-      });
+  document.querySelectorAll('.arrow').forEach(path => {
+    path.classList.remove('highlighted');
+  });
 
-      document.querySelectorAll('.course').forEach(el => {
-        el.classList.remove('active', 'direct-blocked', 'indirect-blocked', 'dependency');
-      });
-    }
+  document.querySelectorAll('.course').forEach(el => {
+    el.classList.remove(
+      'active',
+      'direct-blocked',
+      'indirect-blocked',
+      'dependency',
+      'dimmed-triangle' // 🔥 Add this line
+    );
+  });
+}
+
 
     //Show popup box with course info (prereqs and dependencies)
     function showCourseInfo(courseEl) {
