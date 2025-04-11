@@ -109,7 +109,22 @@
                     border-right: 20px solid transparent;
                     border-bottom: 34px solid yellow;
                     z-index: 1;
-                  }                    
+                  }   
+                  /* Unmet Prereqs – triangle orange */
+.course.unmet[data-type="capstone"] .triangle {
+  border-bottom-color: rgb(51, 139, 216);
+}
+
+.course.unmet[data-type="capstone"] .triangle::before {
+  border-bottom-color: #b6f895; /* pale yellow fill */
+}
+
+/* Optional: for other shapes too */
+.course.unmet .circle {
+  border-color: orange;
+}
+
+                 
                     .label {
                     font-size: 0.85em;
                     color: #0f172a;
@@ -296,11 +311,27 @@
         course.prereqs.map(pr => ({ from: pr, to: course.id }))
       );
       renderCourses();
+      markUnmetPrereqs();
       requestAnimationFrame(() => {
         renderArrows();
       });
     })
     .catch(err => console.error("Failed to load curriculum.json:", err));
+
+    function markUnmetPrereqs() {
+      curriculum.forEach(course => {
+        const courseTerm = course.term;
+        const unmet = course.prereqs.filter(prereqId => {
+          const prereq = curriculum.find(c => c.id === prereqId);
+          return prereq && prereq.term >= courseTerm;
+        });
+
+        if (unmet.length) {
+          const el = document.getElementById(course.id);
+          el.classList.add('unmet');
+        }
+      });
+    }
 
 
     function createCourse(course) {
