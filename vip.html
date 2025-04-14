@@ -1109,7 +1109,7 @@ svg {
       'direct-blocked',
       'indirect-blocked',
       'dependency',
-      'dimmed-triangle' // 🔥 Add this line
+      'dimmed-triangle' 
     );
   });
 }
@@ -1150,10 +1150,10 @@ svg {
   popup.innerHTML = lines.join("<br>");
   popup.style.display = 'block';
 
-  // 🧠 Get the actual screen position of the course element
+  // Get the actual screen position of the course element
   const rect = courseEl.getBoundingClientRect();
 
-  // ✅ Position the popup relative to the screen (fixed)
+  // Position the popup relative to the screen
   popup.style.position = 'fixed';
   popup.style.left = `${rect.left}px`;
   popup.style.top = `${rect.bottom + 6}px`; // 6px below the course
