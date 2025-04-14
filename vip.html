@@ -822,13 +822,68 @@ svg {
     </div>
   
     <div class="key">
-      <h3>Key</h3>
-      <ul>
-        <li><span class="circle example">4</span> = Course Units</li>
-        <li><span class="key-line prereq"></span> Prerequisite</li>
-        <li><span class="key-line blocked"></span> Directly Blocked</li>
-        <li><span class="key-line all"></span> All Dependencies</li>
-      </ul>
+   <!-- === KEY TITLE === -->
+<div style="font-weight: 600; font-size: 0.9em; color: #334155; margin-bottom: 12px;">
+  Course Flow Key
+</div>
+
+<!-- === COURSE TYPES === -->
+<div style="font-size: 0.85em; color: #475569; font-weight: 500; margin: 10px 0 6px;">
+  Course Types
+</div>
+<ul>
+  <li style="margin-bottom: 8px;">
+    <div class="circle example" style="border-radius: 50%; border: 2px solid #ef4444;"></div>
+    Core Course
+  </li>
+  <li style="margin-bottom: 8px;">
+    <div class="circle example" style="border-radius: 8px; border: 2px solid #ef4444;"></div>
+    GE Course
+  </li>
+  <li style="margin-bottom: 8px;">
+    <div class="circle example" style="border-radius: 999px; width: 50px; height: 24px; border: 2px solid #ef4444; display: flex; align-items: center; justify-content: center;"></div>
+    Elective Course
+  </li>
+  <li style="margin-bottom: 12px;">
+    <div class="triangle" style="transform: scale(0.6); border-bottom-color: #ef4444; position: relative; margin-right: 8px;">
+      <div style="position: absolute; top: 4px; left: -20px; border-left: 20px solid transparent; border-right: 20px solid transparent; border-bottom: 34px solid yellow;"></div>
+    </div>
+    Capstone
+  </li>
+</ul>
+
+<!-- === HOVER STATES === -->
+<div style="font-size: 0.85em; color: #475569; font-weight: 500; margin: 18px 0 6px;">
+  Course Path Colors
+</div>
+<ul>
+  <li style="margin-bottom: 8px;">
+    <div class="circle example" style="background: #fef08a; border: 2px solid #3b82f6; box-shadow: 0 0 6px rgba(59,130,246,0.5);"></div>
+    Hovered Course (Yellow)
+  </li>
+  <li style="margin-bottom: 8px;">
+    <div class="circle example" style="background: #d1fae5; border: 2px solid #1a835b;"></div>
+    Directly Blocked (Green)
+  </li>
+  <li style="margin-bottom: 8px;">
+    <div class="circle example" style="background: #dbeafe; border: 2px solid #70a3e0;"></div>
+    Indirectly Blocked (Blue)
+  </li>
+  <li style="margin-bottom: 12px;">
+    <div class="circle example" style="background: #fef3c7; border: 2px solid #381a04;"></div>
+    Prerequisite (Dark Red Border)
+  </li>
+</ul>
+
+<!-- === ARROW MEANINGS === -->
+<div style="font-size: 0.85em; color: #475569; font-weight: 500; margin: 18px 0 6px;">
+  Arrow Types
+</div>
+<ul>
+  <li style="margin-bottom: 8px;"><span class="key-line prereq"></span> Prerequisite Path</li>
+  <li><span class="key-line blocked"></span> Highlighted Dependency</li>
+</ul>
+
     </div>
   </div>
 
