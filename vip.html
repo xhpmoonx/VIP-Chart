@@ -105,6 +105,7 @@ body {
 
 .course.direct-blocked .triangle {
   border-bottom-color: #1a835b;
+  opacity: 0.6;
 }
 
 .course.direct-blocked .triangle::before {
@@ -359,47 +360,47 @@ svg {
 
 /* Hover effect */
 .course:hover .circle {
-  border-color: #3b82f6;
+  border-color: #3b82f6 !important;
   box-shadow: 0 0 8px rgba(59, 130, 246, 0.5);
 }
 
 .course:hover[data-type="capstone"] .triangle {
-  border-bottom-color: #3b82f6;
-  filter: drop-shadow(0 0 6px rgba(59, 130, 246, 0.5));
+  border-bottom-color: #3b82f6 ;
+  filter: drop-shadow(0 0 6px rgba(59, 130, 246, 0.5)) !important;
 }
 
 /* Directly Blocked */
 .course.direct-blocked .circle {
-  background: #e0f2fe;
-  border-color: #1a835b;
-  box-shadow: 0 0 6px rgba(5, 90, 226, 0.79);
+  background: #e0f2fe !important;
+  border-color: #1a835b !important;
+  box-shadow: 0 0 6px rgba(5, 90, 226, 0.79) !important;
 }
 
 .course.direct-blocked .triangle {
-  border-bottom-color: #1a835b;
-  filter: drop-shadow(0 0 6px rgba(5, 90, 226, 0.79));
+  border-bottom-color: #1a835b ;
+  filter: drop-shadow(0 0 6px rgba(5, 90, 226, 0.79)) !important;
 }
 
 /* Indirectly Blocked */
 .course.indirect-blocked .circle {
   background: #f1f5f9;
-  border-color: #70a3e0;
-  opacity: 0.6;
+  border-color: #70a3e0 !important;
+  opacity: 0.9 !important;
 }
 
 .course.indirect-blocked .triangle {
-  border-bottom-color: #70a3e0;
+  border-bottom-color: #70a3e0 ;
   opacity: 0.6;
 }
 
 /* Dependency */
 .course.dependency .circle {
-  background: #fef3c7;
-  border-color: #381a04;
+  background: #fef3c7 !important;
+  border-color: #381a04 !important;
 }
 
 .course.dependency .triangle {
-  border-bottom-color: #381a04;
+  border-bottom-color: #381a04 ;
 }
 
 /* === Arrows === */
